@@ -1,25 +1,23 @@
-#!/usr/bin/with-contenv bashio
+#!/usr/bin/with-contenv bash
+
+CONFIG_PATH=/data/options.json
 
 # Get configuration
-CULTURE=$(bashio::config 'culture')
-CURRENCY=$(bashio::config 'currency')
-TZ=$(bashio::config 'tz')
+CULTURE=$(jq --raw-output '.culture // "en"' $CONFIG_PATH)
+CURRENCY=$(jq --raw-output '.currency // "USD"' $CONFIG_PATH)
+TZ=$(jq --raw-output '.tz // "America/New_York"' $CONFIG_PATH)
 
-# Create data directory if it doesn't exist
-mkdir -p /data/grocy
+echo "Starting Grocy..."
+echo "Culture: ${CULTURE}"
+echo "Currency: ${CURRENCY}"
+echo "Timezone: ${TZ}"
 
-bashio::log.info "Starting Grocy..."
-bashio::log.info "Culture: ${CULTURE}"
-bashio::log.info "Currency: ${CURRENCY}"
-bashio::log.info "Timezone: ${TZ}"
-
-# Set environment variables
+# Set environment variables for LinuxServer container
 export PUID=0
 export PGID=0
 export TZ="${TZ}"
 export GROCY_CULTURE="${CULTURE}"
 export GROCY_CURRENCY="${CURRENCY}"
-export GROCY_MODE="production"
 
-# Start Grocy
+# Start Grocy using the LinuxServer init system
 exec /init
