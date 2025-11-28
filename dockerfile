@@ -1,14 +1,10 @@
-ARG BUILD_FROM
 FROM ghcr.io/linuxserver/grocy:latest
 
+# Set S6 overlay to use bash
+ENV S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0
+
 # Copy run script
-COPY run.sh /
-RUN chmod a+x /run.sh
+COPY run.sh /usr/bin/
+RUN chmod a+x /usr/bin/run.sh
 
-# Expose port
-EXPOSE 8080
-
-# Set working directory
-WORKDIR /app/grocy
-
-CMD [ "/run.sh" ]
+CMD [ "/usr/bin/run.sh" ]
