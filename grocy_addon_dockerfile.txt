@@ -1,0 +1,14 @@
+ARG BUILD_FROM
+FROM ghcr.io/linuxserver/grocy:latest
+
+# Copy run script
+COPY run.sh /
+RUN chmod a+x /run.sh
+
+# Expose port
+EXPOSE 8080
+
+# Set working directory
+WORKDIR /app/grocy
+
+CMD [ "/run.sh" ]
